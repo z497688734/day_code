@@ -1,6 +1,9 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"runtime/debug"
+)
 
 type Node struct {
 	Next	*Node
@@ -26,16 +29,38 @@ func (link  *Link) Put(v int){
 }
 
 
+//func (link *Link) Revert()(*Link){
+//	cur := link.Head
+//	var preNode *Node
+//	for cur != nil {
+//		nextNode := cur.Next
+//		cur.Next = preNode
+//		preNode = cur
+//		cur = nextNode
+//	}
+//	return &Link{Head:preNode}
+//}
+
+
 func (link *Link) Revert()(*Link){
-	cur := link.Head
-	var preNode *Node = nil
-	for cur != nil {
-		nextNode := cur.Next
-		cur.Next  = preNode
-		preNode = cur
-		cur = nextNode
+	head := revert(link.Head)
+	return  &Link{Head :head}
+}
+
+func revert(cur *Node)  (*Node) {
+	fmt.Println("begin print debug...")
+	fmt.Printf("%s", debug.Stack())
+	fmt.Println("end print end...")
+
+	if cur.Next == nil {
+		return cur
 	}
-	return &Link{Head:preNode}
+
+	newhead := revert(cur.Next)
+	cur.Next.Next = cur
+	cur.Next = nil
+	return newhead
+
 }
 func (link  *Link) Print( )  {
 	cur := link.Head
@@ -54,6 +79,8 @@ func main()  {
 	link.Put(2)
 	link.Put(3)
 	link.Put(4)
+	link.Put(5)
+
 	link.Print()
 
 
