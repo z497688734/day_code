@@ -9,9 +9,11 @@ type Node struct {
 	Data     int
 }
 
-
-
-
+func  New() ( *Node)  {
+	head := &Node{}
+	fmt.Println(head.Next)
+	return head
+}
 
 func (head  *Node) AddLast(v int){
 	var last *Node = head
@@ -43,13 +45,22 @@ func RevertRecursion(cur *Node)  (*Node) {
 	if cur.Next == nil {
 		return cur
 	}
-
 	newhead := RevertRecursion(cur.Next)
 	fmt.Println("newHead",newhead)
 	cur.Next.Next = cur
 	cur.Next = nil
 	return newhead
+}
 
+func (head *Node)ReverRecursion2() (*Node)  {
+	if head.Next == nil{
+		return  head
+	}
+
+	newhead := head.Next.ReverRecursion2()
+	head.Next.Next = head
+	head.Next = nil
+	return newhead
 }
 
 func RevertRecursionKGroup(head *Node,num int)  (*Node) {
@@ -123,11 +134,13 @@ func (head  *Node) Print( )  {
 		if cur == nil{
 			break
 		}
+		fmt.Println("data:",cur.Data)
 	}
 }
 
 func main()  {
-	head := &Node{Data:1,Next:nil}
+	head := New()
+	head.AddLast(1)
 	head.AddLast(2)
 	head.AddLast(3)
 	head.AddLast(4)
@@ -138,10 +151,10 @@ func main()  {
 	head.AddLast(9)
 	head.AddLast(10)
 
-	//head.Print()
-	//fmt.Println("begin revert....")
-	//rHead:= head.Revert()
-	//rHead.Print()
+	head.Print()
+	fmt.Println("begin revert....")
+	rHead:= head.ReverRecursion2()
+	rHead.Print()
 	//fmt.Println("begin revert....")
 
 	//r2 := RevertRecursion(head)

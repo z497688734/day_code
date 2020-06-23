@@ -66,4 +66,6 @@ func main()  {
 	a,_ := lru.Get("1")
 	fmt.Println(a)
 
+	fmt.Println(lru.cacheList.Len())
+
 }
