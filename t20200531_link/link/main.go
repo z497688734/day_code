@@ -46,7 +46,6 @@ func RevertRecursion(cur *Node)  (*Node) {
 		return cur
 	}
 	newhead := RevertRecursion(cur.Next)
-	fmt.Println("newHead",newhead)
 	cur.Next.Next = cur
 	cur.Next = nil
 	return newhead
@@ -62,6 +61,23 @@ func (head *Node)ReverRecursion2() (*Node)  {
 	head.Next = nil
 	return newhead
 }
+
+func ReverRecursion3(pre *Node ,cur *Node) (*Node)  {
+	if cur == nil{
+		return  nil
+	}
+	if cur.Next == nil {
+		cur.Next = pre
+		return cur
+	}
+
+	next := cur.Next
+	cur.Next = pre
+	head := ReverRecursion3(cur,next);
+	return head
+}
+
+
 
 func RevertRecursionKGroup(head *Node,num int)  (*Node) {
 	var  nextNode,preNode *Node
@@ -130,11 +146,11 @@ func reverseKGroup(head *Node, k int) *Node {
 func (head  *Node) Print( )  {
 	cur := head
 	for {
-		cur = cur.Next
 		if cur == nil{
 			break
 		}
 		fmt.Println("data:",cur.Data)
+		cur = cur.Next
 	}
 }
 
@@ -153,8 +169,8 @@ func main()  {
 
 	head.Print()
 	fmt.Println("begin revert....")
-	rHead:= head.ReverRecursion2()
-	rHead.Print()
+	//rHead:= head.ReverRecursion2()
+	//rHead.Print()
 	//fmt.Println("begin revert....")
 
 	//r2 := RevertRecursion(head)
@@ -163,7 +179,9 @@ func main()  {
 	//
 	//rLink.Print()
 
-	a := RevertRecursionKGroup(head,2)
+
+	//a := RevertRecursionKGroup(head,2)
+	a := ReverRecursion3(nil,head)
 	a.Print()
 
 	 //b := reverseKGroup(head,2)

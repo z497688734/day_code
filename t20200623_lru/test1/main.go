@@ -1,7 +1,6 @@
 package main
 
 import (
-	"sync"
 	"container/list"
 	"fmt"
 )
@@ -9,20 +8,14 @@ import (
 
 type AtomicInt int64
 type LRUCache struct {
-	mutex sync.Mutex
 	size  int
 	cacheList  *list.List
 	cache      map[interface{}]*list.Element
-	hits, gets  AtomicInt
 }
 
 type Entry struct {
 	k interface{}
 	v interface{}
-}
-type EntryImpA struct {
-	k int
-	v string
 }
 
 func NewLruCache(_size int)  LRUCache {
@@ -38,14 +31,13 @@ func(lru LRUCache) Get(key string) (interface{},bool)  {
 		lru.cacheList.MoveToFront(ele)
 		return ele.Value.(*Entry).v, true
 	}
-
 	return  nil,false
 }
 
 func (lru LRUCache)Set(key string,value interface{})  {
 	if  ele,isOk := lru.cache[key];isOk{
 		lru.cacheList.MoveToFront(ele)
-		ele.Value = value
+		ele.Value.(*Entry).v = value
 		return
 	}
 
@@ -58,14 +50,38 @@ func (lru LRUCache)Set(key string,value interface{})  {
 	}
 }
 
+func (lru LRUCache)print()  {
+	for item := lru.cacheList.Front();nil != item;item = item.Next(){
+		fmt.Println(item.Value.(*Entry))
+	}
+}
+
 func main()  {
 	lru :=  NewLruCache(3)
 	lru.Set("1","1")
-	lru.Set("2","2")
+	lru.Set("1","2")
+
+	//lru.Set("2","2")
+	//lru.Set("3","3")
 
 	a,_ := lru.Get("1")
 	fmt.Println(a)
 
 	fmt.Println(lru.cacheList.Len())
+	lru.print()
+
+
+
+	l := list.New()
+	l.PushFront(2)
+	l.PushFront(3)
+	l.PushFront(4)
+
+
+	fmt.Println(l)
+	fmt.Println(l.Back())
+	fmt.Println(l.Back().Next())
+	fmt.Println(l.Back().Prev())
+
 
 }
