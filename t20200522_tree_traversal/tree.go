@@ -90,11 +90,12 @@ func (bt *BinaryTree) PostOrderNoRecursion() []interface{} {
 
 func main() {
 	t := NewBinaryTree(1)
-	t.Left  = NewBinaryTree(3)
-	t.Right = NewBinaryTree(6)
+	t.Left  = NewBinaryTree(2)
+	t.Right = NewBinaryTree(3)
 	t.Left.Left = NewBinaryTree(4)
 	t.Left.Right = NewBinaryTree(5)
-	t.Left.Left.Left = NewBinaryTree(7)
+	t.Right.Left = NewBinaryTree(6)
+	t.Right.Right = NewBinaryTree(7)
 
 	fmt.Println(t.PreOrderNoRecursion())
 	fmt.Println(t.InOrderNoRecursion())
