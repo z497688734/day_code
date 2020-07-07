@@ -21,14 +21,8 @@ func AddSensitiveToMap(set map[string]interface{} ){
 			if _,ok := nowMap[string(str[i])]; !ok {//如果该key不存在，
 				thisMap := make(map[string]interface{})
 				thisMap["isEnd"] = false
-				fmt.Printf("nowMap:%p\n", nowMap)
-
 				nowMap[string(str[i])] = thisMap
-				fmt.Printf("nowMap:%p\n", nowMap)
-
 				nowMap = thisMap
-				fmt.Printf("nowMap :%p,thisMap:%p; sensitiveWord :%p\n", nowMap,thisMap,sensitiveWord)
-
 			}else {
 				nowMap = nowMap[string(str[i])].(map[string]interface{})
 			}
@@ -93,12 +87,14 @@ func main() {
 	//Set["你妈逼的"] = nil
 	//Set["你妈"] = nil
 	Set["狗日的"] = nil
-	//Set["狗日的"] = nil
+	Set["狗日的傻"] = nil
 
-	//AddSensitiveToMap(Set)
-	//fmt.Println(sensitiveWord)
-	//text := "文明用语你&* 妈, 逼的你这个狗 日的，怎么这么傻啊。我也是服了，我日,这些话我都说不出口"
-	//fmt.Println(ChangeSensitiveWords(text,sensitiveWord))
+	AddSensitiveToMap(Set)
+	fmt.Println(sensitiveWord["狗"])
+
+	fmt.Println(sensitiveWord)
+	text := "文明用语你&* 妈, 逼的你这个狗 日的，怎么这么傻啊。我也是服了，我日,这些话我都说不出口"
+	fmt.Println(ChangeSensitiveWords(text,sensitiveWord))
 	//
 	//
 
