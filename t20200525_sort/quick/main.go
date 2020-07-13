@@ -3,7 +3,7 @@ package main
 import "fmt"
 
 func main()  {
-	var a   []int = []int{3,3,3,3,3,3}
+	var a   []int = []int{3,6,1,2,5,4}
 	fmt.Println(a)
 	quickSort(a,0,len(a)-1)
 
@@ -21,9 +21,8 @@ func quickSort(a []int ,left,right int ){
 		for  j >= p  && a[j] >=  tmp{
 				j--
 		}
-
 		if j> p {
-			a[p] = a[j]
+			a[p],a[j]= a[j],a[p]
 			p = j
 		}
 
@@ -32,11 +31,11 @@ func quickSort(a []int ,left,right int ){
 		}
 
 		if i <p {
-			a[p] = a[i]
+			a[p],a[i] = a[i],a[p]
 			p = i
 		}
 	}
-	a[p] = tmp
+	//a[p] = tmp
 	if p-left > 1{
 		quickSort(a,left,p-1)
 	}
@@ -44,3 +43,5 @@ func quickSort(a []int ,left,right int ){
 		quickSort(a,p+1,right)
 	}
 }
+
+
