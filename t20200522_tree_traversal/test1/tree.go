@@ -1,4 +1,4 @@
-package test1
+package main
 
 import (
 	"container/list"
@@ -88,16 +88,121 @@ func (bt *BinaryTree) PostOrderNoRecursion() []interface{} {
 
 
 
+func findLeftButtomNodeVal(root *BinaryTree,maxDepth *int,val *interface{},depth int){
+	if root == nil{
+		return
+	}
+
+	findLeftButtomNodeVal(root.Left,maxDepth,val,depth+1)
+	findLeftButtomNodeVal(root.Right,maxDepth,val,depth+1)
+	if depth > *maxDepth{
+		*maxDepth = depth
+		*val = root.Data
+	}
+}
+
+func BFS(root *BinaryTree) []interface{}  {
+	res := make([]interface{}, 0)
+	if root == nil {
+		return res
+	}
+	queue := []*BinaryTree{root}
+	for len(queue) > 0 {
+		if queue[0].Left != nil {
+			queue = append(queue, queue[0].Left)
+		}
+		if queue[0].Right != nil {
+			queue = append(queue, queue[0].Right)
+		}
+		res = append(res, queue[0].Data)
+		queue = queue[1:]
+	}
+	return  res
+}
+
+//最大深度
+func getMaxDepthByBFS(root *BinaryTree)  (depth int) {
+	res := make([]interface{}, 0)
+	if root == nil {
+		return 0
+	}
+	queue := []*BinaryTree{root}
+	for len(queue) > 0 {
+		length := len(queue)
+		depth ++
+		for length > 0 {
+			length--
+			if queue[0].Left != nil {
+				queue = append(queue, queue[0].Left)
+			}
+			if queue[0].Right != nil {
+				queue = append(queue, queue[0].Right)
+			}
+			res = append(res, queue[0].Data)
+			queue = queue[1:]
+		}
+	}
+	return  depth
+}
+
+
+//最大深度
+func getMaxDepthByRecursion(root *BinaryTree)  (depth int) {
+	if root == nil{
+		return  0
+	}
+	leftMaxDepth := getMaxDepthByRecursion(root.Left)
+	rightMaxDepth := getMaxDepthByRecursion(root.Right)
+
+	return  1 + max(leftMaxDepth, rightMaxDepth)
+}
+
+//最小深度
+func getMinDepthByRecursion(root *BinaryTree)  (depth int) {
+	if root == nil{
+		return  0
+	}
+	leftMinDepth := getMinDepthByRecursion(root.Left)
+	rightMinDepth := getMinDepthByRecursion(root.Right)
+
+	return  1 + min(leftMinDepth, rightMinDepth)
+}
+
+func max(v1, v2 int) int {
+	if v1 >= v2 {
+		return v1
+	}
+	return v2
+}
+
+func min(v1, v2 int) int {
+	if v1 < v2 {
+		return v1
+	}
+	return v2
+}
+
 func main() {
 	t := NewBinaryTree(1)
 	t.Left  = NewBinaryTree(2)
-	t.Right = NewBinaryTree(3)
-	t.Left.Left = NewBinaryTree(4)
-	t.Left.Right = NewBinaryTree(5)
-	t.Right.Left = NewBinaryTree(6)
-	t.Right.Right = NewBinaryTree(7)
+	//t.Right = NewBinaryTree(3)
+	//t.Left.Left = NewBinaryTree(4)
+	//t.Left.Right = NewBinaryTree(5)
+	//t.Right.Left = NewBinaryTree(6)
+	//t.Right.Right = NewBinaryTree(7)
 
-	fmt.Println(t.PreOrderNoRecursion())
-	fmt.Println(t.InOrderNoRecursion())
-	fmt.Println(t.PostOrderNoRecursion())
+	//fmt.Println(t.PreOrderNoRecursion())
+	//fmt.Println(t.InOrderNoRecursion())
+	//fmt.Println(t.PostOrderNoRecursion())
+
+	//var maxDepth = 1
+	//var val  interface{}
+	//findLeftButtomNodeVal(t,&maxDepth,&val,1)
+	//fmt.Println(val)
+
+	//res  := getMaxDepthByRecursion(t)
+
+	res := getMinDepthByRecursion(t)
+	fmt.Println(res)
+
 }
