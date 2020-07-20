@@ -2,6 +2,8 @@ package main
 
 import (
 	"fmt"
+	"runtime"
+	"time"
 )
 
 type Node struct {
@@ -73,8 +75,7 @@ func ReverRecursion3(pre *Node ,cur *Node) (*Node)  {
 
 	next := cur.Next
 	cur.Next = pre
-	head := ReverRecursion3(cur,next);
-	return head
+	return ReverRecursion3(cur,next);
 }
 
 
@@ -149,26 +150,48 @@ func (head  *Node) Print( )  {
 		if cur == nil{
 			break
 		}
-		fmt.Println("data:",cur.Data)
 		cur = cur.Next
 	}
 }
 
 func main()  {
-	head := New()
-	head.AddLast(1)
-	head.AddLast(2)
-	head.AddLast(3)
-	head.AddLast(4)
-	head.AddLast(5)
-	head.AddLast(6)
-	head.AddLast(7)
-	head.AddLast(8)
-	head.AddLast(9)
-	head.AddLast(10)
+	go func() {
+		for {
+			var m runtime.MemStats
+			tick := time.After(1 * time.Second)
+			select {
+			case <-tick:
+				runtime.ReadMemStats(&m)
+				gb := 1024 * 1024 * 1024.0
+				logstr := fmt.Sprintf("\nAlloc = %v\tTotalAlloc = %v\tSys = %v\t NumGC = %v\n", float64(m.Alloc)/gb, float64(m.TotalAlloc)/gb, float64(m.Sys)/gb, m.NumGC)
+				fmt.Println(logstr)
+			}
+		}
+	}()
 
-	head.Print()
-	fmt.Println("begin revert....")
+	head := New()
+	for j:=1;j<100000;j++ {
+		head.AddLast(j)
+	}
+	fmt.Println("begin ReverRecursion3 \n")
+	for  i:=0 ;i<10;i++{
+		time.Sleep(1 * time.Second)
+		ReverRecursion3(nil,head)
+	}
+	fmt.Println("end ReverRecursion3\n")
+
+	fmt.Println("begin ReverRecursion2\n")
+	for  i:=0 ;i<10;i++{
+		time.Sleep(1 * time.Second)
+		head.ReverRecursion2()
+	}
+	fmt.Println("end ReverRecursion2\n")
+	select {
+	}
+
+
+	//head.Print()
+	//fmt.Println("begin revert....")
 	//rHead:= head.ReverRecursion2()
 	//rHead.Print()
 	//fmt.Println("begin revert....")
@@ -181,8 +204,8 @@ func main()  {
 
 
 	//a := RevertRecursionKGroup(head,2)
-	a := ReverRecursion3(nil,head)
-	a.Print()
+	//a := ReverRecursion3(nil,head)
+	//a.Print()
 
 	 //b := reverseKGroup(head,2)
 	 //b.Print()
