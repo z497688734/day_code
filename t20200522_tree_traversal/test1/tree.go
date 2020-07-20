@@ -135,7 +135,7 @@ func findLeftButtomNodeValByBFS(root *BinaryTree)(val interface{}){
 	return
 }
 
-
+//宽度遍历
 func BFS(root *BinaryTree) []interface{}  {
 	res := make([]interface{}, 0)
 	if root == nil {
@@ -203,6 +203,51 @@ func getMinDepthByRecursion(root *BinaryTree)  (depth int) {
 	return  1 + min(leftMinDepth, rightMinDepth)
 }
 
+
+func findRightButtomNodeVal(root *BinaryTree,maxDepth *int,val *interface{},depth int){
+	if root == nil{
+		return
+	}
+	findRightButtomNodeVal(root.Right,maxDepth,val,depth+1)
+	findRightButtomNodeVal(root.Left,maxDepth,val,depth+1)
+	if depth > *maxDepth{
+		*maxDepth = depth
+		*val = root.Data
+	}
+}
+
+func findRightButtomNodeVal2(root *BinaryTree,val *interface{},depth int) (maxDepth int){
+	if root == nil{
+		return 0
+	}
+	leftMaxDepth := findRightButtomNodeVal2(root.Left,val,depth+1)
+	rightMaxDepth := findRightButtomNodeVal2(root.Right,val,depth+1)
+	maxDepth = 1 + max(leftMaxDepth, rightMaxDepth)
+
+	fmt.Println(depth,maxDepth,root.Data)
+	if depth > maxDepth{
+		maxDepth = depth
+		*val = root.Data
+	}
+	return  maxDepth
+}
+
+
+
+
+
+//反转树的左右节点
+func swapLeftAndRight(root *BinaryTree)  {
+	if root == nil{
+		return
+	}
+	swapLeftAndRight(root.Left)
+	swapLeftAndRight(root.Right)
+
+	tmp := root.Left
+	root.Left = root.Right
+	root.Right = tmp
+}
 func max(v1, v2 int) int {
 	if v1 >= v2 {
 		return v1
@@ -221,24 +266,42 @@ func main() {
 	t := NewBinaryTree(1)
 	t.Left  = NewBinaryTree(2)
 	t.Right = NewBinaryTree(3)
-	t.Left.Left = NewBinaryTree(4)
-	t.Left.Right = NewBinaryTree(5)
+	//t.Left.Left = NewBinaryTree(4)
+	//t.Left.Right = NewBinaryTree(5)
 	t.Right.Left = NewBinaryTree(6)
 	t.Right.Right = NewBinaryTree(7)
+	t.Right.Right.Left = NewBinaryTree(8)
+	t.Right.Right.Right = NewBinaryTree(9)
+
 
 	//fmt.Println(t.PreOrderNoRecursion())
 	//fmt.Println(t.InOrderNoRecursion())
 	//fmt.Println(t.PostOrderNoRecursion())
 
-	var maxDepth = 1
-	var val  interface{}
-	findLeftButtomNodeVal(t,&maxDepth,&val,1)
-	fmt.Println(val)
+	//var maxDepth = 1
+	//var val  interface{}
+	//findLeftButtomNodeVal(t,&maxDepth,&val,1)
+	//fmt.Println(val)
 
 	//res  := getMaxDepthByRecursion(t)
 	//res := getMinDepthByRecursion(t)
 
-	res := findLeftButtomNodeValByBFS(t)
-	fmt.Println(res)
+	//res := findLeftButtomNodeValByBFS(t)
+	//fmt.Println(res)
+
+	//swapLeftAndRight(t)
+	//res := BFS(t)
+	//fmt.Println(res)
+
+	//var maxDepth = 1
+	//var val  interface{}
+	//findRightButtomNodeVal(t,&maxDepth,&val,1)
+	//fmt.Println(val)
+
+
+	var val  interface{}
+	findRightButtomNodeVal2(t,&val,1)
+	fmt.Println(val)
+
 
 }
